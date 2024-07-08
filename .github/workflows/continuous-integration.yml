@@ -206,7 +206,7 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: |
         set MSYSTEM=MINGW64
-        msys2 -c 'ctest -C ${{env.BUILD_TYPE}} -T test --output-on-failure'
+        ctest -C ${{env.BUILD_TYPE}} -T test --output-on-failure
 
     # creates binary package
     - name: Create package

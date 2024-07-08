@@ -194,7 +194,7 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -GNinja -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DODOX_TESTS=ON -DBOOST_ROOT=D:/a/_temp/msys64/mingw64
+        cmake -GNinja -B '${{github.workspace}}\build' -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DODOX_TESTS=ON -DBOOST_ROOT=D:/a/_temp/msys64/mingw64
         ls -l "${{github.workspace}}\build\share\OrthoDocs"
 
     - name: Build

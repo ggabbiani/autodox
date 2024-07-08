@@ -19,7 +19,7 @@
 
 # podman build -t odox-fedora -f Dockerfile.fedora .
 # podman run -t --volume $(realpath path/to/sources):/in --volume $(realpath /path/to/build)/build:/out odox-fedora /in /out Release
-FROM fedora:36
+FROM fedora:39
 LABEL org.opencontainers.image.authors="Giampiero Gabbiani (giampiero@gabbiani.org)"
 
 ARG src=/sources    # externally provided bind mount of sources

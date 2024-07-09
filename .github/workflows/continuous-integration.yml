@@ -268,4 +268,8 @@ jobs:
       if: "${{ steps.latest_release.outputs.prerelease == 'true'}}"
       with:
         upload_url: ${{ steps.latest_release.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/packages/*
+        asset_path: |
+          ${{github.workspace}}/packages/ubuntu/*
+          ${{github.workspace}}/packages/fedora/*
+          ${{github.workspace}}/packages//macos/*
+          ${{github.workspace}}/packages/windows/*

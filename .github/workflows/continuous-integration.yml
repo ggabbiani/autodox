@@ -59,7 +59,7 @@ jobs:
       run: cpack
 
     - name: Upload produced artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
         name: ${{env.ARTIFACTS}}
@@ -88,7 +88,7 @@ jobs:
         docker run -t --volume $(realpath ${{github.workspace}}):/in --volume $(realpath ${{github.workspace}})/build:/out odox-fedora /in /out ${{env.BUILD_TYPE}}
 
     - name: Upload produced artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
         name: ${{env.ARTIFACTS}}
@@ -147,7 +147,7 @@ jobs:
       run: cpack
 
     - name: Upload produced artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
         name: ${{env.ARTIFACTS}}
@@ -217,7 +217,7 @@ jobs:
       run: cpack
 
     - name: Upload produced artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
         name: ${{env.ARTIFACTS}}
@@ -240,6 +240,8 @@ jobs:
       id: git_tag
       run: |
         git tag --merged |tail -n 1 | xargs -I{} echo tag={} >> "$GITHUB_OUTPUT"
+    - run:
+        echo "| Version tag | ${{ steps.git_tag.outputs.tag }} |" >> $GITHUB_STEP_SUMMARY
 
     - name: Get the release associated with the found tag
       id: latest_release
@@ -247,6 +249,8 @@ jobs:
       with:
         tag_name: ${{steps.git_tag.outputs.tag}}
         token: ${{ env.GITHUB_TOKEN }}
+    - run:
+        echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |" >> $GITHUB_STEP_SUMMARY
 
     - name: Download artifacts locally
       # setting no name will download all the produced artifacts in the
@@ -261,12 +265,3 @@ jobs:
       with:
         upload_url: ${{ steps.latest_release.outputs.upload_url }}
         asset_path: ${{github.workspace}}/${{env.ARTIFACTS}}/*
-
-    - run: |
-        {
-          echo "### Summary"
-          echo "| Property          | Value       |"
-          echo "| ----------------- | ----------- |"
-          echo "| Version tag       | ${{steps.git_tag.outputs.tag}}  |"
-          echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |"
-        } >> $GITHUB_STEP_SUMMARY

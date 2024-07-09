@@ -251,11 +251,11 @@ jobs:
 
     - run: |
         {
-          echo "### Results"
-          echo "| Variable   | Value       |"
-          echo "| ---------- | ----------- |"
-          echo "| steps.git_tag.outputs.tag  | ${{steps.git_tag.outputs.tag}}  |"
-          echo "| steps.latest_release.outputs.prerelease | ${{ steps.latest_release.outputs.prerelease }} |"
+          echo "### Summary"
+          echo "| Property          | Value       |"
+          echo "| ----------------- | ----------- |"
+          echo "| Version tag       | ${{steps.git_tag.outputs.tag}}  |"
+          echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |"
         } >> $GITHUB_STEP_SUMMARY
 
     - name: Download artifacts locally
@@ -268,7 +268,7 @@ jobs:
     # upload asset see [Yet Another Upload Release Asset Action](https://github.com/marketplace/actions/yet-another-upload-release-asset-action)
     - name: Automatic asset upload if pre-release
       uses: shogo82148/actions-upload-release-asset@v1
-      if: ${{ steps.latest_release.outputs.prerelease }}
+      if: "${{ steps.latest_release.outputs.prerelease == 'true'}}"
       with:
         # upload_url: ${{ github.event.release.upload_url }}
         # upload_url: ${{ steps.latest_release.outputs.upload_url }}

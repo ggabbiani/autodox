@@ -262,12 +262,14 @@ jobs:
       # name in this case:
       # ${{github.workspace}}/packages-{ubuntu|fedora|macos|windows}/
       uses: actions/download-artifact@v4
+      with:
+        path: ${{github.workspace}}/packages
 
-    - run: ls -al ${{github.workspace}}/packages-{ubuntu,fedora,macos,windows}
+    - run: ls -al ${{github.workspace}}/packages
 
     - name: Automatic asset upload if pre-release
       uses: shogo82148/actions-upload-release-asset@v1
       if: "${{ steps.latest_release.outputs.prerelease == 'true'}}"
       with:
         upload_url: ${{ steps.latest_release.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/packages-*
+        asset_path: ${{github.workspace}}/packages

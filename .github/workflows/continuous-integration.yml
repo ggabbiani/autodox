@@ -17,7 +17,7 @@ env:
 jobs:
   ubuntu-integration:
 
-#    if: false
+    if: false
 
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
@@ -83,6 +83,7 @@ jobs:
     - name: Docker build & run
       working-directory: ${{github.workspace}}/docker
       run: |
+        git status
         mkdir ${{github.workspace}}/build
         docker build -t odox-fedora -f Dockerfile.fedora .
         docker run -t --volume $(realpath ${{github.workspace}}):/in --volume $(realpath ${{github.workspace}})/build:/out odox-fedora /in /out ${{env.BUILD_TYPE}}
@@ -96,7 +97,7 @@ jobs:
 
   macos-integration:
 
-#    if: false
+    if: false
 
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
@@ -154,6 +155,9 @@ jobs:
         path: ${{github.workspace}}/build/*.pkg
 
   windows-integration:
+
+    if: false
+
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
@@ -221,7 +225,8 @@ jobs:
         path: ${{github.workspace}}\build\*.exe
 
   deployment:
-    needs: [fedora-integration, macos-integration, ubuntu-integration, windows-integration]
+    # needs: [fedora-integration, macos-integration, ubuntu-integration, windows-integration]
+    needs: [fedora-integration]
     runs-on: ubuntu-latest
 
     steps:

@@ -249,6 +249,15 @@ jobs:
         token: ${{ env.GITHUB_TOKEN }}
         # latest: true
 
+    - run: |
+        {
+          echo "### Results"
+          echo "| Variable   | Value       |"
+          echo "| ---------- | ----------- |"
+          echo "| steps.git_tag.outputs.tag  | ${{steps.git_tag.outputs.tag}}  |"
+          echo "| steps.latest_release.outputs.prerelease | ${{ steps.latest_release.outputs.prerelease }} |"
+        } >> $GITHUB_STEP_SUMMARY
+
     - name: Download artifacts locally
       # setting no name will download all the produced artifacts in the
       # workspace after creating a directory with their container name

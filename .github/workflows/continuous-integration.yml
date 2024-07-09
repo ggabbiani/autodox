@@ -12,13 +12,11 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   GITHUB_TOKEN: ${{ github.token }}
-  ARTIFACTS: packages
+  # ARTIFACTS: packages
 
 jobs:
   ubuntu-integration:
-
     # if: false
-
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
@@ -62,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
-        name: ${{env.ARTIFACTS}}
+        name: packages-ubuntu
         path: ${{github.workspace}}/build/*.deb
 
   fedora-integration:
@@ -91,7 +89,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
-        name: ${{env.ARTIFACTS}}
+        name: packages-fedora
         path: ${{github.workspace}}/build/*.rpm
 
   macos-integration:
@@ -150,7 +148,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
-        name: ${{env.ARTIFACTS}}
+        name: packages-macos
         path: ${{github.workspace}}/build/*.pkg
 
   windows-integration:
@@ -220,7 +218,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
-        name: ${{env.ARTIFACTS}}
+        name: packages-windows
         path: ${{github.workspace}}\build\*.exe
 
   deployment:
@@ -254,9 +252,9 @@ jobs:
 
     - name: Download artifacts locally
       # setting no name will download all the produced artifacts in the
-      # workspace after creating a directory with their container name
-      # in this case:
-      # ${{github.workspace}}/${{env.ARTIFACTS}}/
+      # ${{github.workspace}} after creating a directory with their container
+      # name in this case:
+      # ${{github.workspace}}/packages-{ubuntu|fedora|macos|windows}/
       uses: actions/download-artifact@v3
 
     - name: Automatic asset upload if pre-release
@@ -264,4 +262,4 @@ jobs:
       if: "${{ steps.latest_release.outputs.prerelease == 'true'}}"
       with:
         upload_url: ${{ steps.latest_release.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/${{env.ARTIFACTS}}/*
+        asset_path: ${{github.workspace}}/packages-*

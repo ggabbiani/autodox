@@ -224,16 +224,7 @@ jobs:
   deployment:
     needs: [fedora-integration, macos-integration, ubuntu-integration, windows-integration]
     runs-on: ubuntu-latest
-
     steps:
-    - name: Summary initialization
-      run: |
-        {
-          echo "### Deployment summary"
-          echo "| Property          | Value       |"
-          echo "| ----------------- | ----------- |"
-        } >> $GITHUB_STEP_SUMMARY
-
     - name: Project checkout
       uses: actions/checkout@v4
       with:
@@ -245,8 +236,6 @@ jobs:
       id: git_tag
       run: |
         git tag --merged |tail -n 1 | xargs -I{} echo tag={} >> "$GITHUB_OUTPUT"
-    - run:
-        echo "| Version tag | ${{ steps.git_tag.outputs.tag }} |" >> $GITHUB_STEP_SUMMARY
 
     - name: Get the release associated with the found tag
       id: latest_release
@@ -254,14 +243,12 @@ jobs:
       with:
         tag_name: ${{steps.git_tag.outputs.tag}}
         token: ${{ env.GITHUB_TOKEN }}
-    - run: echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |" >> $GITHUB_STEP_SUMMARY
 
     - name: Download artifacts locally
+      id: local
       uses: actions/download-artifact@v4
       with:
         path: ${{github.workspace}}/packages
-
-    - run: ls -al ${{github.workspace}}/packages
 
     - name: Automatic asset upload if pre-release
       uses: shogo82148/actions-upload-release-asset@v1
@@ -269,7 +256,17 @@ jobs:
       with:
         upload_url: ${{ steps.latest_release.outputs.upload_url }}
         asset_path: |
-          ${{github.workspace}}/packages/ubuntu/*
-          ${{github.workspace}}/packages/fedora/*
-          ${{github.workspace}}/packages//macos/*
-          ${{github.workspace}}/packages/windows/*
+          ${{steps.local.outputs.download-path}}/ubuntu/*
+          ${{steps.local.outputs.download-path}}/fedora/*
+          ${{steps.local.outputs.download-path}}//macos/*
+          ${{steps.local.outputs.download-path}}/windows/*
+
+    - run: |
+        {
+          echo "### Summary"
+          echo "| Property          | Value       |"
+          echo "| ----------------- | ----------- |"
+          echo "| Version tag | ${{ steps.git_tag.outputs.tag }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |" >> $GITHUB_STEP_SUMMARY
+          } >> $GITHUB_STEP_SUMMARY
+

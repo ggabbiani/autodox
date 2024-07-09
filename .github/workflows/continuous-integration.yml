@@ -226,6 +226,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Summary initialization
+      run: |
+        {
+          echo "### Summary"
+          echo "| Property          | Value       |"
+          echo "| ----------------- | ----------- |"
+        } >> $GITHUB_STEP_SUMMARY
 
     - name: Project checkout
       uses: actions/checkout@v4
@@ -247,8 +254,9 @@ jobs:
       with:
         tag_name: ${{steps.git_tag.outputs.tag}}
         token: ${{ env.GITHUB_TOKEN }}
-    - run:
-        echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |" >> $GITHUB_STEP_SUMMARY
+    - run: echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |" >> $GITHUB_STEP_SUMMARY
+
+    - run: ls -al ${{github.workspace}}/packages-{ubuntu,fedora,macos,windows}
 
     - name: Download artifacts locally
       # setting no name will download all the produced artifacts in the

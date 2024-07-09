@@ -261,7 +261,7 @@ jobs:
       # ${{github.workspace}} after creating a directory with their container
       # name in this case:
       # ${{github.workspace}}/packages-{ubuntu|fedora|macos|windows}/
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - run: ls -al ${{github.workspace}}/packages-{ubuntu,fedora,macos,windows}
 

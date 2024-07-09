@@ -229,7 +229,7 @@ jobs:
     - name: Summary initialization
       run: |
         {
-          echo "### Summary"
+          echo "### Deployment summary"
           echo "| Property          | Value       |"
           echo "| ----------------- | ----------- |"
         } >> $GITHUB_STEP_SUMMARY
@@ -256,14 +256,14 @@ jobs:
         token: ${{ env.GITHUB_TOKEN }}
     - run: echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |" >> $GITHUB_STEP_SUMMARY
 
-    - run: ls -al ${{github.workspace}}/packages-{ubuntu,fedora,macos,windows}
-
     - name: Download artifacts locally
       # setting no name will download all the produced artifacts in the
       # ${{github.workspace}} after creating a directory with their container
       # name in this case:
       # ${{github.workspace}}/packages-{ubuntu|fedora|macos|windows}/
       uses: actions/download-artifact@v3
+
+    - run: ls -al ${{github.workspace}}/packages-{ubuntu,fedora,macos,windows}
 
     - name: Automatic asset upload if pre-release
       uses: shogo82148/actions-upload-release-asset@v1

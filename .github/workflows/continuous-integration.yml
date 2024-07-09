@@ -60,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
-        name: packages-ubuntu
+        name: ubuntu
         path: ${{github.workspace}}/build/*.deb
 
   fedora-integration:
@@ -89,7 +89,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
-        name: packages-fedora
+        name: fedora
         path: ${{github.workspace}}/build/*.rpm
 
   macos-integration:
@@ -148,7 +148,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
-        name: packages-macos
+        name: macos
         path: ${{github.workspace}}/build/*.pkg
 
   windows-integration:
@@ -218,7 +218,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload-artifacts
       with:
-        name: packages-windows
+        name: windows
         path: ${{github.workspace}}\build\*.exe
 
   deployment:
@@ -257,10 +257,6 @@ jobs:
     - run: echo "| Prerelease status | ${{ steps.latest_release.outputs.prerelease }} |" >> $GITHUB_STEP_SUMMARY
 
     - name: Download artifacts locally
-      # setting no name will download all the produced artifacts in the
-      # ${{github.workspace}} after creating a directory with their container
-      # name in this case:
-      # ${{github.workspace}}/packages-{ubuntu|fedora|macos|windows}/
       uses: actions/download-artifact@v4
       with:
         path: ${{github.workspace}}/packages
@@ -272,4 +268,4 @@ jobs:
       if: "${{ steps.latest_release.outputs.prerelease == 'true'}}"
       with:
         upload_url: ${{ steps.latest_release.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/packages
+        asset_path: ${{github.workspace}}/packages/*

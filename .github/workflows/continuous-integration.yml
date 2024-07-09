@@ -224,8 +224,7 @@ jobs:
         path: ${{github.workspace}}\build\*.exe
 
   deployment:
-    # needs: [fedora-integration, macos-integration, ubuntu-integration, windows-integration]
-    needs: [fedora-integration]
+    needs: [fedora-integration, macos-integration, ubuntu-integration, windows-integration]
     runs-on: ubuntu-latest
 
     steps:

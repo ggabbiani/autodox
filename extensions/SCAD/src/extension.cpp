@@ -56,10 +56,11 @@ const array<Extension::Slot,4> Extension::slot{{
 
 void Extension::analyze(Annotation &anno) const {
   for_each(slot.begin(),slot.end(),[&anno,this](const Slot &sl) {
-    auto &data  = anno.data();
-    auto t      = data.c_str();
+    auto &data        = anno.data();
+    auto t            = data.c_str();
+    auto upper_bound  = t+anno.data().length();
     cmatch match;
-    while (regex_search(t, match, sl.regularExpression)) {
+    while (t<upper_bound && regex_search(t, match, sl.regularExpression)) {
       auto offset   = (t-data.c_str());
       auto pos      = match.position(0)+offset;
       auto len      = (analytic::Data::Size)match.length(0);
